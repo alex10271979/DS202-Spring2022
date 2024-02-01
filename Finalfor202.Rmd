@@ -1,0 +1,114 @@
+---
+title: "Final Project"
+author: "Alexis Maldonado"
+date: "5/9/2022"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Partner: Sundar Shivraj
+
+Question: According to IMDB, What factors/variables play into making a successful movie? 
+
+Data: This data comes from kaggle from this link (https://www.kaggle.com/datasets/harshitshankhdhar/imdb-dataset-of-top-1000-movies-and-tv-shows)
+
+Importing Data
+```{r}
+data <- read.csv(file= 'imdb_top_1000.csv')
+```
+
+Cleaning Data
+Because 1000 is too many to have graphed we will be selecting 50 random movies to base our project on
+```{r}
+colnames(data)
+data1 = subset(data, select = -c(Poster_Link,Certificate, Overview, Gross, Meta_score, No_of_Votes) )
+head(data1)
+imdb= data1[sample(nrow(data1), 10), ]
+```
+
+Analysis:
+
+Plot 1
+```{r}
+library(ggplot2)
+ggplot(imdb, aes(x=Runtime, y=IMDB_Rating)) +  geom_boxplot(width=.5, position = position_dodge(width=4), fill="orange")
+```
+Plot 1
+```{r}
+library(ggplot2)
+ggplot(data1, aes(x=Runtime, y=IMDB_Rating)) +  geom_boxplot(width=.5, position = position_dodge(width=4), fill="red")
+```
+In the first plots we see first graphs we compared the rating of the moive to the runtime. In the graph we see a slight increase in rating as the movies get longer until they drop off quickly.
+Plot 2
+```{r}
+ggplot(imdb) +
+  geom_line(aes(x = Director, y = IMDB_Rating), colour = "green")
+```
+
+Plot 2 full dataset
+```{r}
+ggplot(data1) +
+  geom_line(aes(x = Director, y = IMDB_Rating), colour = "violet")
+```
+For the plot 2's we compare the ratings to the director. When we did we found the it had high volatility, probably because it just depends who the director is and each one is very different.
+Plot 3
+```{r}
+ggplot(imdb, aes(x=Star1, y=IMDB_Rating,group=Star1))+
+   geom_point(aes(color=Star1))
+ggplot(imdb, aes(x=Star2, y=IMDB_Rating,group=Star2))+
+   geom_point(aes(color=Star2))
+ggplot(imdb, aes(x=Star3, y=IMDB_Rating,group=Star3))+
+   geom_point(aes(color=Star3))
+ggplot(imdb, aes(x=Star4, y=IMDB_Rating,group=Star4))+
+   geom_point(aes(color=Star4))
+
+```
+
+Plot 3 full dataset
+```{r}
+ggplot(data1, aes(x=Star1, y=IMDB_Rating,group=Star1))+
+   geom_point(aes(color=Star1))
+ggplot(data1, aes(x=Star2, y=IMDB_Rating,group=Star2))+
+   geom_point(aes(color=Star2))
+ggplot(data1, aes(x=Star3, y=IMDB_Rating,group=Star3))+
+   geom_point(aes(color=Star3))
+ggplot(data1, aes(x=Star4, y=IMDB_Rating,group=Star4))+
+   geom_point(aes(color=Star4))
+
+```
+In plots 3 we looked at if the number of stars would increase the rating of the movies. When we did this we found there was weak evidence to support the claim that the more stars you have the higher the rating. It stayed pretty unpredictable when comparing stars and rating.
+
+
+Plot 4 full dataset
+```{r}
+data1 %>% ggplot(aes(x = Released_Year, y = IMDB_Rating, color = Released_Year))+ geom_point()
+```
+When comparing released year and rating we found that the later it release the more hance it had getting a better rating.
+Plot 5
+```{r}
+perf <- ggplot(imdb, aes(x = Series_Title, fill = Series_Title))+ geom_bar(aes(weight = IMDB_Rating)) + coord_flip()
+perf
+```
+
+Plot 5 full dataset
+```{r}
+perf1 <- ggplot(data1, aes(x = Series_Title, fill = Series_Title))+ geom_bar(aes(weight = IMDB_Rating)) + coord_flip()
+perf1
+```
+When looking at 5 we tried to compare ratings and title of the series once again we didnt find any correlation between the two which allows us to understand that the title is not correlated to the ratings.
+Plot 6
+```{r}
+ggplot(data = imdb) + geom_mosaic(aes(x = imdb$IMDB_Rating, fill = Genre)) + labs(y="Rating", x= "Genre")
+```
+
+Plot 6 full dataset
+```{r}
+library(ggplot2)
+ggplot(data = data1)+ geom_mosaic(aes(x= imdb$IMDB_Rating, fill = Genre)) + labs(y="Rating", x= "Genre")
+```
+Now we are comparing the rating to the genre and we see the certain genres tend to correlate with the rating.
+
+
+so in Conclusion to make a successful movie with better ratings you would want to get a well known director with a genre people like and make it longer than most movies but still not too long.
+
