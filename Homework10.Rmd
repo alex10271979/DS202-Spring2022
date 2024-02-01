@@ -1,0 +1,55 @@
+---
+title: "Homework10"
+author: "Alexis Maldonado"
+date: "4/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+```
+Question 1 part 1
+```{r}
+library(tidyverse)
+
+acc <- read.csv("https://raw.githubusercontent.com/yumouqiu/DS202-Spring2022/main/Practice/data/fars2016/accident.csv", stringsAsFactors = FALSE)
+summary(acc$DAY_WEEK)
+acc %>% group_by(DAY_WEEK) %>% tally()
+acc %>% ggplot(aes(x = DAY_WEEK)) + geom_bar()
+```
+Question 1 part 2
+```{r}
+summary(acc$HOUR)
+acc.hour = acc %>% filter(HOUR <= 24) %>% group_by(HOUR) %>% tally()
+view(acc.hour)
+acc.hour = acc %>% filter(HOUR <= 24) %>% ggplot(aes(x = HOUR)) + geom_bar()
+acc %>% filter(HOUR <= 24) %>% ggplot(aes(x = HOUR)) + geom_bar()
+```
+Question 1 part 3
+```{r}
+table(acc$DRUNK_DR)
+```
+Question 2 part 1
+51914 (PERTYP ==1)
+```{r}
+person <- read.csv("https://raw.githubusercontent.com/yumouqiu/DS202-Spring2022/main/Practice/data/fars2016/person.csv",stringsAsFactors = FALSE)
+person1 = person %>% filter(PER_TYP ==1)
+accidentjoin2 = left_join(person1, acc, by = c("STATE", "ST_CASE"))
+accidentjoin2 %>% filter(SEX == c(1,2)) %>% ggplot(aes(x = DAY_WEEK, fill = as.factor(HOUR.x))) + geom_bar() + facet_grid(~SEX) + scale_x_discrete(limits = c("1", "2", "3", "4", "5", "6", "7")) + xlab("Day of Week") + ylab("Count") + guides(fill=guide_legend("Hour"))
+accidentjoin2 %>% count(DAY_WEEK)
+accidentjoin2 %>% count(HOUR.x)
+accidentjoin2 %>% count(SEX)
+head(accidentjoin2)
+```
+Question 2 part 2
+```{r}
+accidentjoin2 = left_join(person, acc, by = c("STATE", "ST_CASE"))
+```
+Question 2 part 3
+```{r}
+accidentjoin2 %>% filter(SEX == c(1,2)) %>% ggplot(aes(x = DAY_WEEK, fill = as.factor(HOUR.x))) + geom_bar() + facet_grid(~SEX) + scale_x_discrete(limits = c("1", "2", "3", "4", "5", "6", "7")) + xlab("Day of Week") + ylab("Count") + guides(fill=guide_legend("Hour"))
+accidentjoin2 %>% count(DAY_WEEK)
+accidentjoin2 %>% count(HOUR.x)
+accidentjoin2 %>% count(SEX)
+head(accidentjoin2)
+```
